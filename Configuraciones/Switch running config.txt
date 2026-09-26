@@ -1,0 +1,192 @@
+Switch-LAN#sh vlan bri
+
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active
+10   Usuarios                         active    Gi0/1
+20   Server-WEB                       active    Gi0/2
+30   Server-DB                        active    Gi0/3
+99   nativa                           active    Gi1/0, Gi1/1, Gi1/2, Gi1/3
+
+
+=========================================================================================
+
+Switch-LAN#sh interfaces status
+
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi0/0     enlace troncal     connected    trunk      a-full   auto RJ45
+Gi0/1     vlan-usuarios      connected    10         a-full   auto RJ45
+Gi0/2     vlan-server-web    connected    20         a-full   auto RJ45
+Gi0/3     vlan-server-base-d connected    30         a-full   auto RJ45
+Gi1/0                        disabled     99           auto   auto RJ45
+Gi1/1                        disabled     99           auto   auto RJ45
+Gi1/2                        disabled     99           auto   auto RJ45
+Gi1/3                        disabled     99           auto   auto RJ45
+
+==========================================================================================
+
+
+
+Switch-LAN#sh port-security int g0/1
+Port Security              : Enabled
+Port Status                : Secure-up
+Violation Mode             : Shutdown
+Aging Time                 : 0 mins
+Aging Type                 : Absolute
+SecureStatic Address Aging : Disabled
+Maximum MAC Addresses      : 2
+Total MAC Addresses        : 0
+Configured MAC Addresses   : 0
+Sticky MAC Addresses       : 0
+Last Source Address:Vlan   : 0000.0000.0000:0
+Security Violation Count   : 0
+
+Switch-LAN#
+Switch-LAN#sh port-security int g0/2
+Port Security              : Disabled
+Port Status                : Secure-down
+Violation Mode             : Shutdown
+Aging Time                 : 0 mins
+Aging Type                 : Absolute
+SecureStatic Address Aging : Disabled
+Maximum MAC Addresses      : 1
+Total MAC Addresses        : 0
+Configured MAC Addresses   : 0
+Sticky MAC Addresses       : 0
+Last Source Address:Vlan   : 0000.0000.0000:0
+Security Violation Count   : 0
+
+=============================================================================================
+
+
+hostname Switch-LAN
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$EG/B$v3mFP1hpo7TOJ8X7o1O3l/
+!
+username admin privilege 15 secret 5 $1$m0fq$l92VYSNrGJAOwMj.CfNYk.
+no aaa new-model
+!
+!
+!
+!
+!
+!
+!
+!
+ip domain-name mario.local
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0/0
+ description enlace troncal
+ switchport access vlan 99
+ switchport trunk allowed vlan 10,20,30
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ negotiation auto
+!
+interface GigabitEthernet0/1
+ description vlan-usuarios
+ switchport access vlan 10
+ switchport mode access
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ switchport port-security
+ negotiation auto
+!
+interface GigabitEthernet0/2
+ description vlan-server-web
+ switchport access vlan 20
+ switchport mode access
+ negotiation auto
+!
+interface GigabitEthernet0/3
+ description vlan-server-base-de-datos
+ switchport access vlan 30
+ switchport mode access
+ negotiation auto
+!
+interface GigabitEthernet1/0
+ switchport access vlan 99
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet1/1
+ switchport access vlan 99
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet1/2
+ switchport access vlan 99
+ shutdown
+ negotiation auto
+!
+interface GigabitEthernet1/3
+ switchport access vlan 99
+ shutdown
+ negotiation auto
+!
+interface Vlan100
+ description manegement
+ ip address 10.14.53.162 255.255.255.240
+!
+ip default-gateway 10.14.53.161
+ip forward-protocol nd
+!
+ip http server
+ip http secure-server
+!
+ip ssh time-out 60
+ip ssh version 2
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+banner motd ^C
+ATENCION!
+
+
+======================================
+EL ACCESO NO AUTORIZADO ESTA PROHIBIDO
+======================================
+
+
+
+ESTE EQUIPO ESTA SIENDO SUPERVISADO 24/7
+
+
+^C
+!
+line con 0
+ password 7 14141B180F0B7B79777C
+ login
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+!
+end
+
