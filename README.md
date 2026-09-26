@@ -1,10 +1,11 @@
-Seguridad-de-Redes
-Practica 1 Seguridad perimetral 
+Práctica 1 - Seguridad perimetral 
 
 Mario Josó Pujols De La Cruz 
 2022-1453
 
+
 --- Video de demostración
+
 
 
 --- Objetivo del laboratorio
@@ -12,6 +13,8 @@ Mario Josó Pujols De La Cruz
 El objetivo de este laboratorio es implementar una infraestructura de red segura utilizando FortiGate como firewall principal, un switch Cisco y diferentes VLAN para separar usuarios, servidor web, servidor de base de datos y administración.
 
 También se implementaron controles de seguridad como políticas de firewall, NAT, DHCP, Port-Security, SSH, filtrado de archivos, IPS y protección contra ataques DoS.
+
+
 
 --- La topología está compuesta por:
 
